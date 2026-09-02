@@ -1,0 +1,50 @@
+{
+  "name": "kimi-usage-simplified",
+  "displayName": "Kimi Usage (Simplified)",
+  "description": "极简 Kimi 用量状态栏组件：5h / weekly 用量百分比 + hover 重置倒计时",
+  "version": "0.1.0",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "main": "./extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "commands": [
+      {
+        "command": "kimi-usage.refresh",
+        "title": "Kimi Usage: 刷新用量"
+      },
+      {
+        "command": "kimi-usage.configureApiKey",
+        "title": "Kimi Usage: 配置 API Key"
+      },
+      {
+        "command": "kimi-usage.showRawResponse",
+        "title": "Kimi Usage: 查看接口原始响应（调试）"
+      }
+    ],
+    "configuration": {
+      "title": "Kimi Usage",
+      "properties": {
+        "kimi-usage.apiUrl": {
+          "type": "string",
+          "default": "https://api.kimi.ai/coding/v1/usages",
+          "description": "Kimi 用量接口地址"
+        },
+        "kimi-usage.accessToken": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Kimi API access token（也可用环境变量 `KIMI_ACCESS_TOKEN`）。未配置时状态栏显示 `API key missing`。"
+        },
+        "kimi-usage.refreshIntervalSeconds": {
+          "type": "number",
+          "default": 60,
+          "minimum": 5,
+          "description": "用量自动刷新间隔（秒）"
+        }
+      }
+    }
+  }
+}
