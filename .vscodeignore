@@ -1,0 +1,7 @@
+test/**
+kimi-usage-mockup.png
+kimi-usage-mockup-hover.png
+.gitignore
+.vscode/**
+*.vsix
+backup/**

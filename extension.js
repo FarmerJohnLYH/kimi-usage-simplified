@@ -50,10 +50,14 @@ function getConfig() {
  *   limits: [{ window:{duration:300,timeUnit:MINUTE}, detail:{limit,used,resetTime} }] → 5h 窗口
  * 数值字段是字符串；resetTime 为 ISO 8601。 */
 function normalizeUsage(body) {
-  const toPct = (used, limit, label) => {
-    const u = Number(used), l = Number(limit);
+  // used 缺失时（如用量 0% 的窗口不返回 used 字段）用 limit - remaining 反推
+  const toPct = (quota, label) => {
+    const l = Number(quota && quota.limit);
+    const u = quota && quota.used != null
+      ? Number(quota.used)
+      : Number(quota && quota.limit) - Number(quota && quota.remaining);
     if (!Number.isFinite(u) || !Number.isFinite(l) || l <= 0) {
-      throw new Error(`${label} 配额字段非法: used=${used}, limit=${limit}`);
+      throw new Error(`${label} 配额字段非法: used=${quota && quota.used}, remaining=${quota && quota.remaining}, limit=${quota && quota.limit}`);
     }
     return (u / l) * 100;
   };
@@ -74,8 +78,8 @@ function normalizeUsage(body) {
   if (!fiveHourEntry || !fiveHourEntry.detail) throw new Error('响应 limits 中找不到 5 小时窗口配额');
 
   return {
-    fiveHourPct: toPct(fiveHourEntry.detail.used, fiveHourEntry.detail.limit, '5h'),
-    weeklyPct: toPct(weekly.used, weekly.limit, 'weekly'),
+    fiveHourPct: toPct(fiveHourEntry.detail, '5h'),
+    weeklyPct: toPct(weekly, 'weekly'),
     fiveHourResetAt: toDate(fiveHourEntry.detail.resetTime, '5h'),
     weeklyResetAt: toDate(weekly.resetTime, 'weekly'),
   };

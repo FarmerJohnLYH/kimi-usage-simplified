@@ -2,8 +2,15 @@
   "name": "kimi-usage-simplified",
   "displayName": "Kimi Usage (Simplified)",
   "description": "极简 Kimi 用量状态栏组件：5h / weekly 用量百分比 + hover 重置倒计时",
-  "version": "0.1.0",
-  "publisher": "local",
+  "version": "0.1.4",
+  "license": "MIT",
+  "icon": "icon.png",
+  "publisher": "YuanhaoLiu",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FarmerJohnLYH/kimi-usage-simplified"
+  },
+  "homepage": "https://github.com/FarmerJohnLYH/kimi-usage-simplified",
   "engines": {
     "vscode": "^1.85.0"
   },

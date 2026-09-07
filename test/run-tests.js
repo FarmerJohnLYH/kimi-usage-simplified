@@ -83,6 +83,16 @@ test('limits 乱序时仍选中 300 分钟窗口', () => {
 });
 test('缺 usage 字段抛错', () => assert.throws(() => normalizeUsage({}), /usage/));
 test('limits 为空抛错', () => assert.throws(() => normalizeUsage({ usage: fixture.usage }), /limits/));
+test('无 used 字段时按 limit - remaining 计算（用量 0% 场景）', () => {
+  const u = normalizeUsage({
+    usage: { limit: '100', remaining: '100', resetTime: '2026-09-09T09:12:15Z' },
+    limits: [{ window: { duration: 300, timeUnit: 'TIME_UNIT_MINUTE' }, detail: { limit: '100', remaining: '58', resetTime: '2026-09-02T19:12:15Z' } }],
+  });
+  assert.strictEqual(Math.round(u.weeklyPct), 0);
+  assert.strictEqual(Math.round(u.fiveHourPct), 42);
+});
+test('无 used 且无 remaining 时抛错', () =>
+  assert.throws(() => normalizeUsage({ usage: { limit: '100', resetTime: '2026-09-09T09:12:15Z' }, limits: fixture.limits }), /非法/));
 test('used/limit 非法抛错', () =>
   assert.throws(() => normalizeUsage({ usage: fixture.usage, limits: [{ window: { duration: 300, timeUnit: 'TIME_UNIT_MINUTE' }, detail: { limit: '0', used: 'x', resetTime: '2026-09-02T19:12:15Z' } }] }), /非法/));
 
